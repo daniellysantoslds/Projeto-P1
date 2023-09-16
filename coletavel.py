@@ -1,19 +1,23 @@
+import pygame
 import pygame as pg
 import random
 
 pg.init()
+
 largura_tela = 400
 altura_tela = 600
 tela = pg.display.set_mode((largura_tela, altura_tela))
-start_ticks = pg.time.get_ticks()  # starter tick
+# start_ticks = pg.time.get_ticks()  # starter tick
 
 valor_inicial = 1
 meta = random.randint(0,100)
 branco = (255, 255, 255)
-fonte = pg.font.Font('assets/fonts/pixel-art.ttf', 20)  # Fonte para exibir o contador]
+fonte = pg.font.Font('assets/fonts/pixel-art.ttf', 20)  # Fonte para exibir o contador
 
 # Lista de operações matemáticas
 operacoes = ["+", "-", "x", "/"]  # Use "x" para representar multiplicação
+
+
 
 class Coletavel:
     def __init__(self):
@@ -77,10 +81,17 @@ pontuacao = 0
 intervalo_geracao = 2000  # Defina o intervalo de geração (menos objetos ao mesmo tempo)
 limite_geracao = intervalo_geracao 
 
-# Posição inicial do jogador
-jogador_x = largura_tela // 2 - 20
-jogador_y = altura_tela - 40
-jogador_velocidade = 5  # Velocidade de movimento do jogador
+# # Posição inicial do jogador
+# jogador_x = largura_tela // 2 - 20
+# jogador_y = altura_tela - 40
+# jogador_velocidade = 5  # Velocidade de movimento do jogador
+
+# Jogador
+jogador_largura = 50
+jogador_altura = 20
+jogador_x = (largura_tela - jogador_largura) // 2
+jogador_y = altura_tela - jogador_altura
+velocidade_jogador = 1
 
 executando = True
 while executando:
@@ -107,15 +118,33 @@ while executando:
     for objeto in objetos_caindo:
         objeto.desenhar_objeto()
 
-    jogador_rect = pg.Rect(largura_tela // 2 - 20, altura_tela - 40, 40, 40)  # Posição e tamanho do jogador
-    pg.draw.rect(tela, branco, jogador_rect)
+    # jogador_rect = pg.Rect(largura_tela // 2 - 20, altura_tela - 40, 40, 40)  # Posição e tamanho do jogador
+    # jogador = pg.draw.rect(tela, branco, jogador_rect)
 
-    # Lógica de movimento do jogador
-    teclas = pg.key.get_pressed()
-    if teclas[pg.K_LEFT]:
-        jogador_x -= jogador_velocidade
-    if teclas[pg.K_RIGHT]:
-        jogador_x += jogador_velocidade
+    jogador_rect = pg.Rect(jogador_x, jogador_y, 40, 40)  # Posição e tamanho do jogador
+    jogador = pg.draw.rect(tela, branco, jogador_rect)
+
+    # jogador_largura = 50
+    # jogador_altura = 20
+    # jogador_x = (largura_tela - jogador_largura) // 2
+    # jogador_y = altura_tela - jogador_altura
+    # velocidade_jogador = 5
+
+    # Capturar entrada do teclado
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_LEFT] and jogador_x > 0:
+        jogador_x -= velocidade_jogador
+    if keys[pygame.K_RIGHT] and jogador_x < largura_tela - jogador_largura:
+        jogador_x += velocidade_jogador
+
+    # #Lógica de movimento do jogador
+    # teclas = pg.key.get_pressed()
+    # if teclas[pg.K_LEFT]:
+    #     jogador_x -= jogador_velocidade
+    # if teclas[pg.K_RIGHT]:
+    #     jogador_x += jogador_velocidade
+
+
         
     # Verifique colisões
     for objeto in objetos_caindo:
