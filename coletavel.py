@@ -12,12 +12,31 @@ tela = pg.display.set_mode((largura_tela, altura_tela))
 valor_inicial = 1
 meta = random.randint(0,100)
 branco = (255, 255, 255)
+vermelho = (255, 45, 45)
 fonte = pg.font.Font('assets/fonts/pixel-art.ttf', 20)  # Fonte para exibir o contador
 
 # Lista de operações matemáticas
 operacoes = ["+", "-", "x", "/"]  # Use "x" para representar multiplicação
 
 
+class ScoreBoard:
+    #iniciando os valorem em 0
+    def __init__(self):
+        self.scores = {
+            "+": 0,
+            "-": 0,
+            "x": 0,
+            "/": 0
+        }
+
+    def increment (self, operation, value):
+        if operation in self.scores:
+            self.scores[operation] += value
+    def display(self, surface, font, x_offset, y_offset):
+            for operacao, score in self.scores.items():
+                score_surface = font.render(f"{operacao}: {score}", True, vermelho)
+                surface.blit(score_surface, (x_offset, y_offset))
+                y_offset += 30
 
 class Coletavel:
     def __init__(self):
@@ -26,32 +45,31 @@ class Coletavel:
         self.velocidade = 0.1  # Defina uma velocidade constante
         self.operacao = random.choice(operacoes)  # Escolha aleatória de operação
         self.operando = random.randint(1, 10)  # Número aleatório pro operando
-        
         self.resposta = self.calcular_resposta()
 
-    def calcular_opercao(self):
-        operacao = random.choice(operacoes)  # Escolha aleatória de operação
-        operando = random.randint(1, 10)  # Número aleatório pro operando
-        resultado = valor_inicial
-        while True:
+    # def calcular_opercao(self):
+    #     operacao = random.choice(operacoes)  # Escolha aleatória de operação
+    #     operando = random.randint(1, 10)  # Número aleatório pro operando
+    #     resultado = valor_inicial
+    #     while True:
             
-            if operacao == "+":
-                resultado += operando
-            elif operacao == "-":
-                resultado -= operando
-            elif operacao == "x":
-                resultado *= operando
-            elif operacao == "/":
-                resultado /= operando
+    #         if operacao == "+":
+    #             resultado += operando
+    #         elif operacao == "-":
+    #             resultado -= operando
+    #         elif operacao == "x":
+    #             resultado *= operando
+    #         elif operacao == "/":
+    #             resultado /= operando
 
-            if resultado == meta:
-                break
-            else:
-                # Se o resultado não atingir a meta, escolha outra operação aleatória
-                operacao = random.choice(operacoes)
-                operando = random.randint(1, 10)
+    #         if resultado == meta:
+    #             break
+    #         else:
+    #             # Se o resultado não atingir a meta, escolha outra operação aleatória
+    #             operacao = random.choice(operacoes)
+    #             operando = random.randint(1, 10)
 
-        return operacao, operando
+    #     return operacao, operando
     
     def calcular_resposta(self):
         resposta = valor_inicial  # Inicialize com o valor_inicial
@@ -75,11 +93,9 @@ class Coletavel:
         tela.blit(objeto_surface, objeto_rect)
 
 objetos_caindo = []
-
 contador = 0
-pontuacao = 0
-intervalo_geracao = 2000  # Defina o intervalo de geração (menos objetos ao mesmo tempo)
-limite_geracao = intervalo_geracao 
+intervalo_geracao = 2000
+limite_geracao = intervalo_geracao
 
 # # Posição inicial do jogador
 # jogador_x = largura_tela // 2 - 20
@@ -93,21 +109,21 @@ jogador_x = (largura_tela - jogador_largura) // 2
 jogador_y = altura_tela - jogador_altura
 velocidade_jogador = 1
 
+scoreboard = ScoreBoard()
+
 executando = True
 while executando:
-    for evento in pg.event.get():
-        if (evento.type == pg.QUIT) or (evento.type == pg.KEYDOWN and pg.key.get_pressed()[pg.K_ESCAPE]):
+    for evento in pygame.event.get():
+        if (evento.type == pygame.QUIT) or (evento.type == pygame.KEYDOWN and pygame.key.get_pressed()[pygame.K_ESCAPE]):
             executando = False
             break
 
     if contador < limite_geracao:
         contador += 1
-
     else:
         novo_objeto = Coletavel()
         objetos_caindo.append(novo_objeto)
         contador = 0
-
         limite_geracao = random.randint(1, intervalo_geracao)
 
     for objeto in objetos_caindo:
@@ -118,54 +134,41 @@ while executando:
     for objeto in objetos_caindo:
         objeto.desenhar_objeto()
 
-    # jogador_rect = pg.Rect(largura_tela // 2 - 20, altura_tela - 40, 40, 40)  # Posição e tamanho do jogador
-    # jogador = pg.draw.rect(tela, branco, jogador_rect)
+    jogador_rect = pygame.Rect(jogador_x, jogador_y, jogador_largura, jogador_altura)
+    pygame.draw.rect(tela, branco, jogador_rect)
 
-    jogador_rect = pg.Rect(jogador_x, jogador_y, 40, 40)  # Posição e tamanho do jogador
-    jogador = pg.draw.rect(tela, branco, jogador_rect)
-
-    # jogador_largura = 50
-    # jogador_altura = 20
-    # jogador_x = (largura_tela - jogador_largura) // 2
-    # jogador_y = altura_tela - jogador_altura
-    # velocidade_jogador = 5
-
-    # Capturar entrada do teclado
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT] and jogador_x > 0:
         jogador_x -= velocidade_jogador
     if keys[pygame.K_RIGHT] and jogador_x < largura_tela - jogador_largura:
         jogador_x += velocidade_jogador
 
-    # #Lógica de movimento do jogador
-    # teclas = pg.key.get_pressed()
-    # if teclas[pg.K_LEFT]:
-    #     jogador_x -= jogador_velocidade
-    # if teclas[pg.K_RIGHT]:
-    #     jogador_x += jogador_velocidade
-
-
-        
-    # Verifique colisões
     for objeto in objetos_caindo:
-        objeto_rect = pg.Rect(objeto.x, objeto.y, 20, 20)
+        objeto_rect = pygame.Rect(objeto.x, objeto.y, 20, 20)
         if jogador_rect.colliderect(objeto_rect):
-            pontuacao += 1
-            valor_inicial = objeto.resposta  # Atualize o valor inicial com a resposta do objeto
+            if objeto.operacao == "+":
+                valor_inicial += objeto.operando
+            elif objeto.operacao == "-":
+                valor_inicial -= objeto.operando
+            elif objeto.operacao == "x":
+                valor_inicial *= objeto.operando
+            elif objeto.operacao == "/":
+                valor_inicial /= objeto.operando
+            scoreboard.increment(objeto.operacao, objeto.operando)
             objetos_caindo.remove(objeto)
 
-    # Exiba o valor inicial e a meta na tela
     texto_meta = fonte.render(f"Meta: {meta}", True, branco)
     tela.blit(texto_meta, (250, 10))
-    
-    # Exiba o valor inicial na tela
     valor_surface = fonte.render(f"Valor: {valor_inicial}", True, branco)
     tela.blit(valor_surface, (10, 10))
 
-    # Verifique se o jogador atingiu a meta
+    x_offset = 10
+    y_offset = 40
+    scoreboard.display(tela, fonte, x_offset, y_offset)
+
     if valor_inicial >= meta:
         executando = False
 
-    pg.display.flip()
+    pygame.display.flip()
 
-pg.quit()
+pygame.quit()
