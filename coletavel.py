@@ -27,13 +27,17 @@ class Coletavel:
         self.resposta = self.calcular_resposta()
 
     def calcular_resposta(self):
-        resposta = valor_inicial  # Inicialize com o valor_inicial
+        resposta = valor_inicial
+        # Determinando a operação
         if self.operacao == "+":
             resposta += self.operando
+            
         elif self.operacao == "-":
             resposta -= self.operando
+            
         elif self.operacao == "x":
             resposta *= self.operando
+            
         elif self.operacao == "/":
             resposta /= self.operando
             
@@ -105,7 +109,7 @@ while executando:
         objeto_rect = pg.Rect(objeto.x, objeto.y, 20, 20)
         if jogador_rect.colliderect(objeto_rect):
             pontuacao += 1
-            valor_inicial = objeto.resposta  # Atualize o valor inicial com a resposta do objeto
+            valor_inicial = objeto.calcular_resposta()  # Sem argumentos
             objetos_caindo.remove(objeto)
 
     # Exiba o valor inicial e a meta na tela
@@ -121,7 +125,7 @@ while executando:
     tela.blit(texto_tempo, ((largura_tela/2), 10))  # Posicione o texto onde você deseja na tela
 
     # Verifique se o jogador atingiu a meta
-    if valor_inicial >= meta or tempo_restante == 0:
+    if valor_inicial == meta or tempo_restante == 0:
         executando = False
 
     pg.display.flip()
