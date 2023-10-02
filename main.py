@@ -4,8 +4,9 @@ import pygame as pg
 from sys import exit
 # Importando as clases
 from pplayer import Player
-from coletavel import Coletavel, ScoreBoard
+from coletavel import Coletavel
 from timer import TimerGame
+from scoreboard import ScoreBoard
 
 
 def main():

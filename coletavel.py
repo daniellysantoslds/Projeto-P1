@@ -2,6 +2,7 @@ import pygame as pg
 import random
 from timer import TimerGame
 from pplayer import Player
+from scoreboard import ScoreBoard
 
 pg.init()
 largura_tela = 400
@@ -56,24 +57,24 @@ class Coletavel:
         objeto_rect = objeto_surface.get_rect(center=(self.x + 10, self.y + 10))
         tela.blit(objeto_surface, objeto_rect)
 
-class ScoreBoard:
-    def __init__(self):
-        self.scores = {
-            "+": 0,
-            "-": 0,
-            "x": 0,
-            "/": 0
-        }
+# class ScoreBoard:
+#     def __init__(self):
+#         self.scores = {
+#             "+": 0,
+#             "-": 0,
+#             "x": 0,
+#             "/": 0
+#         }
 
-    def increment(self, operation):
-        if operation in self.scores:
-            self.scores[operation] += 1
+#     def increment(self, operation):
+#         if operation in self.scores:
+#             self.scores[operation] += 1
 
-    def display(self, surface, font, x_offset, y_offset):
-        for operacao, score in self.scores.items():
-            score_surface = font.render(f"{operacao}: {score}", True, branco)
-            surface.blit(score_surface, (x_offset, y_offset))
-            y_offset += 30
+#     def display(self, surface, font, x_offset, y_offset):
+#         for operacao, score in self.scores.items():
+#             score_surface = font.render(f"{operacao}: {score}", True, branco)
+#             surface.blit(score_surface, (x_offset, y_offset))
+#             y_offset += 30
 
 
 objetos_caindo = []

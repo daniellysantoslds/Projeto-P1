@@ -2,7 +2,8 @@ import pygame as pg
 import random
 from timer import TimerGame
 from pplayer import Player
-from coletavel import Coletavel, ScoreBoard
+from coletavel import Coletavel
+from scoreboard import ScoreBoard
 
 # Inicialização do pygame
 pg.init()
